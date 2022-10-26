@@ -1,8 +1,15 @@
 const router = require('express').Router()
-const {getPost} = require('../controller/posts_controler')
 const {verifyToken} = require('../middleware/middleware')
+const {fileUpload, getPosts, getPost} = require('../controller/post')
+const upload = require('../config/storage')
 
 
-router.get('/getpost', verifyToken, getPost)
+router.get('/getpost', verifyToken, getPosts)
+
+
+router.get('/getpost/:filename', getPost)
+
+
+router.post('/upload', verifyToken, upload.single("file"), fileUpload)
 
 module.exports = router

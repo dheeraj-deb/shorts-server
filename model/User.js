@@ -11,7 +11,7 @@ const userSchema = new Schema({
     unique: true,
     lowercase: true,
     minLength: 3,
-    maxLength: 10,
+    maxLength: 30,
   },
   email: {
     type: String,
@@ -24,12 +24,12 @@ const userSchema = new Schema({
     validate: {
       validator: (v) => {
         let val = v.split("");
-        return val.length > 6;
+        return val.length >= 6;
       },
       message: (props) => `${props.value} has to be grater than 6`,
     },
   },
-  date_of_birth: {
+  age: {
     type: String,
     required: true,
   },
@@ -40,6 +40,14 @@ const userSchema = new Schema({
     type: Date,
     immutable: true,
     default: () => Date.now(),
+  },
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
+  resetLink: {
+    type: String,
+    default: "",
   },
 });
 
@@ -57,13 +65,13 @@ const User = mongoose.model("User", userSchema);
 
 const validate = (data) => {
   const schema = joi.object({
-    username: joi.string().min(3).max(8).label("Username"),
+    username: joi.string().min(3).max(30).label("Username"),
     email: joi.string().email().required().label("Email"),
-    date_of_birth: joi.string().required().label("Date of birth"),
-    password: joiPasswordComplexity().required().label("Password"),
+    age: joi.string().required().label("age"),
+    password: joi.string().required().label("Password"),
   });
 
   return schema.validate(data);
 };
 
-module.exports = {User, validate}
+module.exports = { User, validate };
