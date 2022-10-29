@@ -37,7 +37,7 @@ const signIn = asyncHandler(async (req, res, next) => {
 
   const { username, password } = req.body;
 
-  const user = await User.findOne({ username:username });
+  const user = await User.findOne({ username: username });
 
   if (!user) {
     res.status(401);
@@ -66,6 +66,7 @@ const signIn = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json({
+    _id: user._id,
     username: user.username,
     email: user.email,
     accessToken: token,

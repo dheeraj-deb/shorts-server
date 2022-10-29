@@ -1,15 +1,15 @@
 const router = require('express').Router()
-const {verifyToken} = require('../middleware/middleware')
-const {fileUpload, getPosts, getPost} = require('../controller/post')
-const upload = require('../config/storage')
+const { verifyToken } = require('../middleware/middleware')
+const { fileUpload, getPosts, likeandDislike } = require('../controller/post')
+const upload = require('../config/multer')
 
 
-router.get('/getpost', verifyToken, getPosts)
 
+router.post('/upload', verifyToken, upload.single('video'), fileUpload)
 
-router.get('/getpost/:filename', getPost)
+router.get('/getposts', getPosts)
 
+router.patch('/like/:postId', verifyToken, likeandDislike)
 
-router.post('/upload', verifyToken, upload.single("file"), fileUpload)
 
 module.exports = router
