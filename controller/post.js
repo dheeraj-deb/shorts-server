@@ -7,7 +7,7 @@ const fs = require('fs')
 
 
 const fileUpload = asyncHandler(async (req, res) => {
-    
+    console.log(req.file)
 })
 
 
