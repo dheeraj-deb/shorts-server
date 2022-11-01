@@ -7,42 +7,7 @@ const fs = require('fs')
 
 
 const fileUpload = asyncHandler(async (req, res) => {
-    const filePath = `/home/dheeraj/Videos/uploads/${req.file.filename}`
-    const folder = '/home/dheeraj/Videos/uploads'
-    cloudinary.uploader.upload(filePath, {
-        resource_type: "video",
-        folder: "video"
-    },
-        async (err, result) => {
-            if (err) {
-                return res.status(500).json({ message: err })
-            }
-
-            const upload = new Post({
-                title: req.body.title,
-                description: req.body.description,
-                filename: req.file.originalname,
-                postUri: result.url,
-                cloudinary_id: result.public_id,
-                postedBy: req.user.id
-            })
-
-            const post = await upload.save()
-
-            await User.findByIdAndUpdate({ _id: req.user.id }, {
-                $push: {
-                    posts: post._id
-                }
-            })
-
-            fs.unlinkSync(filePath)
-
-            res.status(201).json({
-                message: "success",
-                post: post
-            })
-        })
-
+    
 })
 
 
@@ -105,7 +70,7 @@ const addComment = (req, res) => {
     const postId = req.params.postId
 
 
-    
+
 }
 
 
