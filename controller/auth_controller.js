@@ -69,6 +69,11 @@ const signIn = asyncHandler(async (req, res, next) => {
     _id: user._id,
     username: user.username,
     email: user.email,
+    age: user.age,
+    followers: user.followers,
+    following: user.following,
+    isBlocked: user.isBlocked,
+    posts: user.posts,
     accessToken: token,
   });
 });

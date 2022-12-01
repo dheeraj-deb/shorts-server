@@ -36,11 +36,6 @@ const userSchema = new Schema({
   followers: [mongoose.SchemaTypes.ObjectId],
   following: [mongoose.SchemaTypes.ObjectId],
   posts: [mongoose.SchemaTypes.ObjectId],
-  date: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now(),
-  },
   isBlocked: {
     type: Boolean,
     default: false,
@@ -49,6 +44,17 @@ const userSchema = new Schema({
     type: String,
     default: "",
   },
+  bio: {
+    type: String
+  },
+  commentedPosts: {
+    type: Array,
+  },
+  savedPost: {
+    type: Array
+  }
+}, {
+  timestamps: true
 });
 
 userSchema.pre("validate", async function (next) {

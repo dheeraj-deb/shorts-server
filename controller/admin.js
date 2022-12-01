@@ -77,6 +77,11 @@ const editUser = asyncHandler(async (req, res) => {
   });
 });
 
+
+// const editPost = asyncHandler(async (req, res) => {
+
+// })
+
 module.exports = {
   fetchUser,
   blockAndUnblock,

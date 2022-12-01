@@ -11,7 +11,9 @@ const postSchema = new Schema({
   },
   likes: [],
   postedBy: { type: mongoose.SchemaTypes.ObjectId, ref: "User" },
-  comments: [],
+  comments: {
+    type: Array
+  },
   time: {
     type: Date,
     immutable: true,
@@ -20,9 +22,14 @@ const postSchema = new Schema({
   postUri: {
     type: String,
   },
-  cloudinary_id: {
-    type: String,
+  size: {
+    type: Number
   },
+  filename: {
+    type: String
+  },
+}, {
+  timestamps: true
 });
 
 const Post = model("Post", postSchema);
