@@ -89,17 +89,17 @@ const getPosts = asyncHandler(async (req, res) => {
 
 
 
-    if (!response?.length > 0) {
-        return res.status(204).json({
-            message: "No posts found!"
+    if (response.length) {
+        return res.status(200).json({
+            message: "success",
+            posts: response
         })
     }
 
-
-    res.status(200).json({
-        message: "success",
-        posts: response
+    return res.status(204).json({
+        message: "No posts found!"
     })
+
 
 });
 
