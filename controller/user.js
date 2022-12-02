@@ -77,7 +77,7 @@ const suggestUsers = asyncHandler(async (req, res) => {
     }).limit(10).select("-password")
 
     const suggestion = user.filter((user) => {
-        return (!user.followers.includes(userId))
+        return (!user?.followers?.includes(userId))
     })
 
     res.status(200).json({
@@ -158,10 +158,35 @@ const findUserById = asyncHandler(async (req, res) => {
     res.status(200).json(user)
 })
 
+
+const fetchFollowers = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+    const user = await User.findById(userId).populate("followers", '-password').select("-password")
+
+    if (user.followers) {
+        res.status(200).json(user.followers)
+    } else {
+        res.status(400).json({ message: "No Followers Found!" })
+    }
+})
+
+const fetchFollowing = asyncHandler(async (req, res) => {
+    const { userId } = req.params
+    const user = await User.findById(userId).populate("following", '-password').select("-password")
+
+    if (user.followers) {
+        res.status(200).json(user.followers)
+    } else {
+        res.status(400).json({ message: "No Following Users Found!" })
+    }
+})
+
 module.exports = {
     findUserPosts,
     editProfile,
     suggestUsers,
     followAndUnfollow,
-    findUserById
+    findUserById,
+    fetchFollowers,
+    fetchFollowing
 }

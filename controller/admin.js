@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
+const fs = require("fs")
 const { default: mongoose } = require("mongoose");
 const { User } = require("../model/User");
+const { Post } = require("../model/Post")
 
 const fetchUser = asyncHandler(async (req, res) => {
   const user = await User.find().select("-password");
@@ -53,37 +55,54 @@ const blockAndUnblock = asyncHandler(async (req, res) => {
   }
 });
 
-const editUser = asyncHandler(async (req, res) => {
-  const { _id, username, email, age, date } = req.body;
-  const response = await User.findByIdAndUpdate(
-    { _id: _id },
-    {
-      username: username,
-      email: email,
-      age: age,
-      date: date,
-    }
-  ).select("-password");
 
-  if (!response) {
-    res.status(500).json({
-      message: "Something went wrong!",
-    });
+const fetchPosts = asyncHandler(async (req, res) => {
+  const posts = await Post.find()
+
+  if (posts.length) {
+    return res.status(200).json(posts)
+  } else {
+    return res.status(400).json("No Posts Found!")
   }
 
-  res.status(200).json({
-    message: "success",
-    res: response,
-  });
-});
+})
 
+const removePost = asyncHandler(async (req, res) => {
+  const { postId } = req.params
 
-// const editPost = asyncHandler(async (req, res) => {
+  const post = await Post.findByIdAndDelete(postId)
 
-// })
+  if (post) {
+    fs.unlinkSync(post.postUri)
+    const user = await User.findById(post.postedBy)
+
+    if (user.posts.includes(post._id)) {
+      user.posts.pull(post._id)
+      if (user.commentedPosts.includes(post._id)) {
+        user.commentedPosts.pull(post._id)
+      }
+      await user.save()
+    }
+
+    const response = await User.findByIdAndUpdate(userId, {
+      $pull: { posts: post._id }
+    })
+
+    res.status(200).json({
+      message: "post deleted successfully",
+      postId: post._id
+    })
+
+  } else {
+    res.status(400).json({ message: "Something went Wrong!" })
+  }
+})
+
 
 module.exports = {
   fetchUser,
   blockAndUnblock,
-  editUser,
+  fetchPosts,
+  removePost,
+
 };

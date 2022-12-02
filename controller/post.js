@@ -209,8 +209,6 @@ const deletePost = asyncHandler(async (req, res) => {
         $pull: { posts: post._id }
     })
 
-    console.log(response);
-
     res.status(200).json({
         message: "post deleted successfully",
         postId: post._id
