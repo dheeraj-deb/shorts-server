@@ -43,29 +43,29 @@ const findUserPosts = asyncHandler(async (req, res) => {
     }
 })
 
-// const editProfile = asyncHandler(async (req, res) => {
-//     const { username, bio, profile } = req.body
+const editProfile = asyncHandler(async (req, res) => {
+    const { username, bio, profile } = req.body
 
-//     console.log("REQQQQQ", username, bio, profile);
+    console.log("REQQQQQ", username, bio, profile);
 
-//     const userId = req.user.id
+    const userId = req.user.id
 
 
-//     const response = await User.findByIdAndUpdate(userId, {
-//         $set: {
-//             username,
-//             bio
-//         }
-//     })
+    // const response = await User.findByIdAndUpdate(userId, {
+    //     $set: {
+    //         username,
+    //         bio
+    //     }
+    // })
 
-//     if (response) {
-//         res.status(200).json({ message: "Profile updated successfully" })
-//     } else {
-//         res.status(400).json({
-//             message: "Something went wrong!"
-//         })
-//     }
-// })
+    // if (response) {
+    //     res.status(200).json({ message: "Profile updated successfully" })
+    // } else {
+    //     res.status(400).json({
+    //         message: "Something went wrong!"
+    //     })
+    // }
+})
 
 
 // const suggestUsers = asyncHandler(async (req, res) => {
