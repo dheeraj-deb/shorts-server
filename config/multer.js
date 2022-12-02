@@ -5,13 +5,13 @@ const asyncHandler = require('express-async-handler')
 // storage engine
 const videoStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '/home/dheeraj/Videos/uploads')
+        cb(null, '/public/videos/uploads')
     }
 })
 
 const imageStorage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '/home/dheeraj/images/uploads')
+        cb(null, '/public/images/uploads')
     }
 })
 
