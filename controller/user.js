@@ -77,7 +77,7 @@ const suggestUsers = asyncHandler(async (req, res) => {
     }).limit(10).select("-password")
 
     const suggestion = user.filter((usr) => {
-        return !usr?.followers?.includes(userId)
+        return ((!usr?.followers?.includes(userId)))
     })
 
     res.status(200).json({
