@@ -69,21 +69,22 @@ const editProfile = asyncHandler(async (req, res) => {
 
 
 const suggestUsers = asyncHandler(async (req, res) => {
-    const userId = req.user.id
-    const user = await User.find({
-        _id: {
-            $ne: userId
-        }
-    }).limit(10).select("-password")
+    // const userId = req.user.id
+    // const user = await User.find({
+    //     _id: {
+    //         $ne: userId
+    //     }
+    // }).limit(10).select("-password")
 
-    const suggestion = user.filter((user) => {
-        return !user.followers?.includes(userId)
-    })
+    // const suggestion = user.filter((user) => {
+    //     return !user.followers?.includes(userId)
+    // })
 
     res.status(200).json({
         message: "success",
-        suggestion
+
     })
+    //suggestion
 
 })
 
