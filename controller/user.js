@@ -77,7 +77,7 @@ const suggestUsers = asyncHandler(async (req, res) => {
     }).limit(10).select("-password")
 
     const suggestion = user.filter((user) => {
-        return (!user?.followers?.includes(userId))
+        return !user?.followers?.includes(userId)
     })
 
     res.status(200).json({
@@ -161,23 +161,26 @@ const findUserById = asyncHandler(async (req, res) => {
 
 const fetchFollowers = asyncHandler(async (req, res) => {
     const { userId } = req.params
+    console.log("fetching folowers", userId)
     const user = await User.findById(userId).populate("followers", '-password').select("-password")
 
     if (user.followers) {
+        console.log(user.followers);
         res.status(200).json(user.followers)
     } else {
-        res.status(400).json({ message: "No Followers Found!" })
+        res.status(400).json([])
     }
 })
 
 const fetchFollowing = asyncHandler(async (req, res) => {
     const { userId } = req.params
-    const user = await User.findById(userId).populate("following", '-password').select("-password")
+    const user = await User.findById(mongoose.Types.ObjectId(userId)).populate("following", '-password').select("-password")
 
-    if (user.followers) {
-        res.status(200).json(user.followers)
+    if (user.following) {
+        console.log(user.following);
+        res.status(200).json(user.following)
     } else {
-        res.status(400).json({ message: "No Following Users Found!" })
+        res.status(400).json([])
     }
 })
 
