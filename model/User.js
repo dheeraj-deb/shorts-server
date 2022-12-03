@@ -33,8 +33,14 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  followers: [mongoose.SchemaTypes.ObjectId],
-  following: [mongoose.SchemaTypes.ObjectId],
+  followers: {
+    type: Array,
+    ref: "User"
+  },
+  following: {
+    type: Array,
+    ref: "User"
+  },
   posts: [mongoose.SchemaTypes.ObjectId],
   isBlocked: {
     type: Boolean,
