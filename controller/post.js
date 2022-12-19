@@ -307,9 +307,9 @@ const addComment = asyncHandler(async (req, res) => {
 
 const deleteComment = asyncHandler(async (req, res) => {
     const { commentId } = req.params
-
-    const response = await Comment.findOneAndDelete(commentId)
-
+    const response = await Comment.findOneAndDelete({
+        commentId
+    })
     if (response) {
         res.status(200).json({ response })
     } else {

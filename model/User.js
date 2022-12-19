@@ -53,6 +53,9 @@ const userSchema = new Schema({
   bio: {
     type: String
   },
+  profileUri:{
+    type:String
+  },
   commentedPosts: {
     type: Array,
   },

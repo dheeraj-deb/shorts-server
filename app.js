@@ -11,6 +11,7 @@ const server = http.createServer(app);
 // middleWares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static('public/images/uploads'))
 app.use(cors());
 
 const PORT = process.env.PORT || 8080;

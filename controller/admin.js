@@ -99,10 +99,14 @@ const removePost = asyncHandler(async (req, res) => {
 })
 
 
+const totalUsers = (req, res) => {
+  
+}
+
+
 module.exports = {
   fetchUser,
   blockAndUnblock,
   fetchPosts,
   removePost,
-
 };
