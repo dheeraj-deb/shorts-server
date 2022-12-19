@@ -7,10 +7,6 @@ const { default: mongoose } = require("mongoose");
 
 
 const fileUpload = asyncHandler(async (req, res) => {
-
-    console.log(req.body);
-    console.log(req.file);
-
     const { file, body } = req
     const userId = req.user.id
 
