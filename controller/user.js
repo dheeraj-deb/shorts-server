@@ -5,6 +5,7 @@ const { Post } = require("../model/Post");
 const { default: mongoose } = require("mongoose");
 const { Chat } = require("../model/Chat");
 const { s3Bucket } = require("../config/s3");
+const { Notification } = require("../model/Notification");
 
 const findUserPosts = asyncHandler(async (req, res) => {
     const { userId } = req.params
@@ -30,7 +31,7 @@ const findUserPosts = asyncHandler(async (req, res) => {
 
     ])
 
-    console.log("posts", posts);
+
 
     if (posts.length) {
         res.status(200).json({
@@ -152,14 +153,13 @@ const followAndUnfollow = asyncHandler(async (req, res) => {
 
 const findUserById = asyncHandler(async (req, res) => {
     const { id } = req.params
-    const user = await User.findById(id).select('-password')
+    const user = await User.findById(mongoose.Types.ObjectId(id)).select('-password')
     res.status(200).json(user)
 })
 
 
 const fetchFollowers = asyncHandler(async (req, res) => {
     const { userId } = req.params
-    console.log("fetching folowers", userId)
     const user = await User.findById(userId).populate("followers", '-password').select("-password")
 
     if (user.followers) {
@@ -182,6 +182,34 @@ const fetchFollowing = asyncHandler(async (req, res) => {
     }
 })
 
+const createNotification = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+    const { secondUserId } = req.params;
+    console.log(secondUserId);
+    const existing = await Notification.find({ userOne: userId })
+
+    // if (!existing.userTwo.includes(secondUserId)) {
+    const response = await Notification.create({
+        userOne: userId,
+        userTwo: secondUserId
+    })
+    if (!response) return res.status(400).json("Something went wrong!")
+    res.status(200).json("Notification Created")
+    // }
+})
+
+
+const fetchNotifications = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    const response = await Notification.find({
+        userTwo: userId
+    })
+
+    if (!response) return res.status(400).json({ message: "No notifications" })
+    res.status(200).json(response)
+})
+
 module.exports = {
     findUserPosts,
     editProfile,
@@ -189,5 +217,7 @@ module.exports = {
     followAndUnfollow,
     findUserById,
     fetchFollowers,
-    fetchFollowing
+    fetchFollowing,
+    createNotification,
+    fetchNotifications
 }

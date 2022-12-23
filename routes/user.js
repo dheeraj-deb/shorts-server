@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const { verifyToken } = require('../middleware/middleware')
 const { fileUpload, getPosts, likeAndDislike, stream, deletePost, addComment, replyToComment, getComments, deleteComment, likeAndDislikeComment, editPost, findPostById, savePost, getSavedPost } = require('../controller/post')
-const { findUserPosts, suggestUsers, followAndUnfollow, findUserById, editProfile, fetchFollowers, fetchFollowing } = require('../controller/user')
+const { findUserPosts, suggestUsers, followAndUnfollow, findUserById, editProfile, fetchFollowers, fetchFollowing, createNotification, fetchNotifications } = require('../controller/user')
 const upload = require('../config/multer')
 const { uploadImage, uploadVideo } = require('../config/multer')
 
@@ -52,5 +52,9 @@ router.post('/user/edit', verifyToken, uploadImage.single('profile'), editProfil
 router.get('/user/followers/:userId', verifyToken, fetchFollowers)
 
 router.get('/user/following/:userId', verifyToken, fetchFollowing)
+
+router.post('/user/notification/:secondUserId', verifyToken, createNotification)
+
+router.get('/user/notifications/:userId', verifyToken, fetchNotifications)
 
 module.exports = router
