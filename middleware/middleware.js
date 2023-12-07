@@ -1,41 +1,52 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../model/User");
+const asyncHandler = require("express-async-handler");
 
-exports.checkDuplicateUsernameOrEmail = async (req, res, next) => {
-  try {
-    const { username, email } = req.body;
+exports.checkDuplicateUsernameOrEmail = asyncHandler(async (req, res, next) => {
+  const { username, email } = req.body;
 
-    const isUsernameExist = await User.findOne({ username: username });
+  const isUsernameExist = await User.findOne({ username: username }).select('-password')
 
-    if (isUsernameExist) {
-      res.status(400).json({ message: "Failed! username is already in use" });
-      return;
-    }
-
-    const isEmailExist = await User.findOne({ email });
-
-    if (isEmailExist) {
-      res.status(400).json({ message: "Failed! email is already in use" });
-      return;
-    }
-    next();
-  } catch (error) {
-    throw new Error(error);
+  if (isUsernameExist) {
+    res.status(400)
+    throw new Error("Username is already in use")
   }
-};
 
-exports.verifyToken = (req, res, next) => {
-  try {
-    const token = req.headers["authorization"].split(" ")[1];
-    if (!token)
-      return res.status(401).json({ message: "Access token not found on" });
-    jwt.verify(token, process.env.JWT_TOKEN, (err, data) => {
-      if (err) {
-        return res.status(401).json({ message: err.message });
-      }
-      next();
-    });
-  } catch (error) {
-    next(new Error(error));
+  const isEmailExist = await User.findOne({ email }).select('-password')
+
+  if (isEmailExist) {
+    res.status(400)
+    throw new Error("Email is already in use")
   }
-};
+
+  next();
+
+});
+
+exports.verifyToken = asyncHandler(async (req, res, next) => {
+  if (req.headers["authorization"]) {
+    const token = req.headers["authorization"].split(" ")[1]
+    const response = await jwt.verify(token, process.env.JWT_TOKEN)
+    if (response) {
+      req.user = response
+      next()
+    }
+  } else {
+    res.status(401)
+    throw new Error("Access token not found on headers")
+  }
+});
+
+
+exports.verifyAdmin = asyncHandler(async (req, res, next) => {
+  if (req.headers["authorization"]) {
+    const token = req.headers["authorization"].split(" ")[1]
+    const response = await jwt.verify(token, process.env.JWT_ADMIN_TOKEN)
+    if (response) {
+      next()
+    }
+  } else {
+    res.status(401)
+    throw new Error("Access token not found on headers")
+  }
+})

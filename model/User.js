@@ -11,7 +11,7 @@ const userSchema = new Schema({
     unique: true,
     lowercase: true,
     minLength: 3,
-    maxLength: 10,
+    maxLength: 30,
   },
   email: {
     type: String,
@@ -24,23 +24,46 @@ const userSchema = new Schema({
     validate: {
       validator: (v) => {
         let val = v.split("");
-        return val.length > 6;
+        return val.length >= 6;
       },
       message: (props) => `${props.value} has to be grater than 6`,
     },
   },
-  date_of_birth: {
+  age: {
     type: String,
     required: true,
   },
-  followers: [mongoose.SchemaTypes.ObjectId],
-  following: [mongoose.SchemaTypes.ObjectId],
-  posts: [mongoose.SchemaTypes.ObjectId],
-  date: {
-    type: Date,
-    immutable: true,
-    default: () => Date.now(),
+  followers: {
+    type: Array,
+    ref: "User"
   },
+  following: {
+    type: Array,
+    ref: "User"
+  },
+  posts: [mongoose.SchemaTypes.ObjectId],
+  isBlocked: {
+    type: Boolean,
+    default: false,
+  },
+  resetLink: {
+    type: String,
+    default: "",
+  },
+  bio: {
+    type: String
+  },
+  profileUri:{
+    type:String
+  },
+  commentedPosts: {
+    type: Array,
+  },
+  savedPost: {
+    type: Array
+  }
+}, {
+  timestamps: true
 });
 
 userSchema.pre("validate", async function (next) {
@@ -57,13 +80,13 @@ const User = mongoose.model("User", userSchema);
 
 const validate = (data) => {
   const schema = joi.object({
-    username: joi.string().min(3).max(8).label("Username"),
+    username: joi.string().min(3).max(30).label("Username"),
     email: joi.string().email().required().label("Email"),
-    date_of_birth: joi.string().required().label("Date of birth"),
-    password: joiPasswordComplexity().required().label("Password"),
+    age: joi.string().required().label("age"),
+    password: joi.string().required().label("Password"),
   });
 
   return schema.validate(data);
 };
 
-module.exports = {User, validate}
+module.exports = { User, validate };
